@@ -1,0 +1,235 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="UniversiteModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Bolumler">
+          <Key>
+            <PropertyRef Name="BolumID" />
+          </Key>
+          <Property Name="BolumID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BolumAdı" Type="varchar" MaxLength="50" />
+          <Property Name="FakulteID" Type="int" />
+        </EntityType>
+        <EntityType Name="Fakulteler">
+          <Key>
+            <PropertyRef Name="fakulteID" />
+          </Key>
+          <Property Name="fakulteID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FakulteAdı" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Ogrenciler">
+          <Key>
+            <PropertyRef Name="Numara" />
+          </Key>
+          <Property Name="Numara" Type="int" Nullable="false" />
+          <Property Name="Ad" Type="varchar" MaxLength="50" />
+          <Property Name="Soyad" Type="varchar" MaxLength="50" />
+          <Property Name="Telefon" Type="numeric" Precision="11" Scale="0" />
+          <Property Name="BolumID" Type="int" />
+          <Property Name="FakulteID" Type="int" />
+        </EntityType>
+        <Association Name="FK_Bolumler_ToFakulteler">
+          <End Role="Fakulteler" Type="Self.Fakulteler" Multiplicity="0..1" />
+          <End Role="Bolumler" Type="Self.Bolumler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fakulteler">
+              <PropertyRef Name="fakulteID" />
+            </Principal>
+            <Dependent Role="Bolumler">
+              <PropertyRef Name="FakulteID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Ogrenciler_ToBolumler">
+          <End Role="Bolumler" Type="Self.Bolumler" Multiplicity="0..1" />
+          <End Role="Ogrenciler" Type="Self.Ogrenciler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bolumler">
+              <PropertyRef Name="BolumID" />
+            </Principal>
+            <Dependent Role="Ogrenciler">
+              <PropertyRef Name="BolumID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Ogrenciler_ToFakulteler">
+          <End Role="Fakulteler" Type="Self.Fakulteler" Multiplicity="0..1" />
+          <End Role="Ogrenciler" Type="Self.Ogrenciler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fakulteler">
+              <PropertyRef Name="fakulteID" />
+            </Principal>
+            <Dependent Role="Ogrenciler">
+              <PropertyRef Name="FakulteID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="UniversiteModelStoreContainer">
+          <EntitySet Name="Bolumler" EntityType="Self.Bolumler" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Fakulteler" EntityType="Self.Fakulteler" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Ogrenciler" EntityType="Self.Ogrenciler" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Bolumler_ToFakulteler" Association="Self.FK_Bolumler_ToFakulteler">
+            <End Role="Fakulteler" EntitySet="Fakulteler" />
+            <End Role="Bolumler" EntitySet="Bolumler" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ogrenciler_ToBolumler" Association="Self.FK_Ogrenciler_ToBolumler">
+            <End Role="Bolumler" EntitySet="Bolumler" />
+            <End Role="Ogrenciler" EntitySet="Ogrenciler" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ogrenciler_ToFakulteler" Association="Self.FK_Ogrenciler_ToFakulteler">
+            <End Role="Fakulteler" EntitySet="Fakulteler" />
+            <End Role="Ogrenciler" EntitySet="Ogrenciler" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="UniversiteModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Bolumler">
+          <Key>
+            <PropertyRef Name="BolumID" />
+          </Key>
+          <Property Name="BolumID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BolumAdı" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FakulteID" Type="Int32" />
+          <NavigationProperty Name="Fakulteler" Relationship="Self.FK_Bolumler_ToFakulteler" FromRole="Bolumler" ToRole="Fakulteler" />
+          <NavigationProperty Name="Ogrencilers" Relationship="Self.FK_Ogrenciler_ToBolumler" FromRole="Bolumler" ToRole="Ogrenciler" />
+        </EntityType>
+        <EntityType Name="Fakulteler">
+          <Key>
+            <PropertyRef Name="fakulteID" />
+          </Key>
+          <Property Name="fakulteID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FakulteAdı" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Bolumlers" Relationship="Self.FK_Bolumler_ToFakulteler" FromRole="Fakulteler" ToRole="Bolumler" />
+          <NavigationProperty Name="Ogrencilers" Relationship="Self.FK_Ogrenciler_ToFakulteler" FromRole="Fakulteler" ToRole="Ogrenciler" />
+        </EntityType>
+        <EntityType Name="Ogrenciler">
+          <Key>
+            <PropertyRef Name="Numara" />
+          </Key>
+          <Property Name="Numara" Type="Int32" Nullable="false" />
+          <Property Name="Ad" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Soyad" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Telefon" Type="Decimal" Precision="11" Scale="0" />
+          <Property Name="BolumID" Type="Int32" />
+          <Property Name="FakulteID" Type="Int32" />
+          <NavigationProperty Name="Bolumler" Relationship="Self.FK_Ogrenciler_ToBolumler" FromRole="Ogrenciler" ToRole="Bolumler" />
+          <NavigationProperty Name="Fakulteler" Relationship="Self.FK_Ogrenciler_ToFakulteler" FromRole="Ogrenciler" ToRole="Fakulteler" />
+        </EntityType>
+        <Association Name="FK_Bolumler_ToFakulteler">
+          <End Role="Fakulteler" Type="Self.Fakulteler" Multiplicity="0..1" />
+          <End Role="Bolumler" Type="Self.Bolumler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fakulteler">
+              <PropertyRef Name="fakulteID" />
+            </Principal>
+            <Dependent Role="Bolumler">
+              <PropertyRef Name="FakulteID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Ogrenciler_ToBolumler">
+          <End Role="Bolumler" Type="Self.Bolumler" Multiplicity="0..1" />
+          <End Role="Ogrenciler" Type="Self.Ogrenciler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bolumler">
+              <PropertyRef Name="BolumID" />
+            </Principal>
+            <Dependent Role="Ogrenciler">
+              <PropertyRef Name="BolumID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Ogrenciler_ToFakulteler">
+          <End Role="Fakulteler" Type="Self.Fakulteler" Multiplicity="0..1" />
+          <End Role="Ogrenciler" Type="Self.Ogrenciler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fakulteler">
+              <PropertyRef Name="fakulteID" />
+            </Principal>
+            <Dependent Role="Ogrenciler">
+              <PropertyRef Name="FakulteID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="UniversiteEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Bolumlers" EntityType="Self.Bolumler" />
+          <EntitySet Name="Fakultelers" EntityType="Self.Fakulteler" />
+          <EntitySet Name="Ogrencilers" EntityType="Self.Ogrenciler" />
+          <AssociationSet Name="FK_Bolumler_ToFakulteler" Association="Self.FK_Bolumler_ToFakulteler">
+            <End Role="Fakulteler" EntitySet="Fakultelers" />
+            <End Role="Bolumler" EntitySet="Bolumlers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ogrenciler_ToBolumler" Association="Self.FK_Ogrenciler_ToBolumler">
+            <End Role="Bolumler" EntitySet="Bolumlers" />
+            <End Role="Ogrenciler" EntitySet="Ogrencilers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ogrenciler_ToFakulteler" Association="Self.FK_Ogrenciler_ToFakulteler">
+            <End Role="Fakulteler" EntitySet="Fakultelers" />
+            <End Role="Ogrenciler" EntitySet="Ogrencilers" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="UniversiteModelStoreContainer" CdmEntityContainer="UniversiteEntities">
+          <EntitySetMapping Name="Bolumlers">
+            <EntityTypeMapping TypeName="UniversiteModel.Bolumler">
+              <MappingFragment StoreEntitySet="Bolumler">
+                <ScalarProperty Name="BolumID" ColumnName="BolumID" />
+                <ScalarProperty Name="BolumAdı" ColumnName="BolumAdı" />
+                <ScalarProperty Name="FakulteID" ColumnName="FakulteID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Fakultelers">
+            <EntityTypeMapping TypeName="UniversiteModel.Fakulteler">
+              <MappingFragment StoreEntitySet="Fakulteler">
+                <ScalarProperty Name="fakulteID" ColumnName="fakulteID" />
+                <ScalarProperty Name="FakulteAdı" ColumnName="FakulteAdı" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Ogrencilers">
+            <EntityTypeMapping TypeName="UniversiteModel.Ogrenciler">
+              <MappingFragment StoreEntitySet="Ogrenciler">
+                <ScalarProperty Name="Numara" ColumnName="Numara" />
+                <ScalarProperty Name="Ad" ColumnName="Ad" />
+                <ScalarProperty Name="Soyad" ColumnName="Soyad" />
+                <ScalarProperty Name="Telefon" ColumnName="Telefon" />
+                <ScalarProperty Name="BolumID" ColumnName="BolumID" />
+                <ScalarProperty Name="FakulteID" ColumnName="FakulteID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
